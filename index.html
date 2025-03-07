@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenword</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="game-container">
+        <div class="score-container">
+            <p>Score: <span id="score">0</span></p>
+        </div>
+        <div class="current-word-container">
+            <p>Current word: <span id="current-word"></span></p>
+            <p>Hint: <span id="possible-word"></span></p>
+        </div>
+        <!-- Replace the grid-container with a container for SVG -->
+        <div class="hexagon-grid-container">
+            <svg id="hexagon-grid"></svg>
+        </div>
+        <div class="controls-container">
+            <button id="hint-button">Hint</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

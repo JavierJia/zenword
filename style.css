@@ -1,0 +1,65 @@
+/* style.css */
+body {
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+}
+
+.game-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.score-container {
+  margin-bottom: 10px;
+}
+.controls-container {
+  display:flex;
+  justify-content: center;
+}
+
+/* New styles for current word display */
+.current-word-container {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+/* New styles for word origin display */
+.word-origin-container {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+/* Styles for the hexagon grid */
+.hexagon-grid-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hexagon {
+  /* Hide the hexagon shape */
+  fill: transparent;
+  stroke: transparent;
+  /*stroke: #ccc;*/ /* You can uncomment to check if it is hidden */
+  stroke-width: 2;
+  cursor: pointer;
+}
+
+.hexagon-text{
+  font-size: 24px; /* Reduce font size */
+  text-anchor: middle;
+  dominant-baseline: middle;
+  user-select: none;
+  cursor: pointer;
+  stroke: black; /* Add stroke to improve letter visibility */
+  stroke-width: 0.5; /* Adjust stroke width as needed */
+}
+.hexagon-text.selected {
+    fill: lightblue; /* Change text color when selected */
+}
