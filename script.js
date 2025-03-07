@@ -3,7 +3,7 @@ const gridContainer = document.getElementById("hexagon-grid");
 const scoreDisplay = document.getElementById("score");
 const hintButton = document.getElementById("hint-button");
 const currentWordDisplay = document.getElementById("current-word");
-const possibleWordDisplay = document.getElementById("possible-word");
+const answersArea = document.getElementById("answers-area"); // New element
 
 let hexagonRadius = 100; // Keep the radius
 let score = 0;
@@ -13,7 +13,8 @@ let validWords = []; // Now it will be loaded from the word list
 let originWord = "";
 let currentLetters = [];//we need to keep the current letters.
 let possibleWords = new Set(); // we now keep all the possible words.
-let hintIndex = 0; // Initialize hint index
+let foundWords = new Set();
+let revealedLetters = new Set();
 
 function getVertexCoordinates(radius) {
     const vertices = [];
@@ -56,6 +57,7 @@ function generateGrid() {
     shuffleArray(currentLetters); // Shuffle the letters
     //find all the possible words.
     possibleWords = findPossibleWords(currentLetters);
+    updateAnswerArea();// create the answers area
     for (let i = 0; i < 6; i++) {
         const letter = currentLetters[i];
         const vertex = vertices[i];
@@ -78,7 +80,7 @@ function generateLetterDistribution() {
     const sixLetterWords = validWords.filter(word => word.length === 6);
     const randomWord = sixLetterWords[Math.floor(Math.random() * sixLetterWords.length)];
     originWord = randomWord; //we now keep the origin word.
-    console.log("Origin word:", originWord); //update the UI
+    console.log("Origin word:", originWord);
     let letters = randomWord.split("");// get all the letters
     while (letters.length < 6) {
         letters.push(getRandomLetter());
@@ -157,6 +159,8 @@ function validateWord() {
     if (validWords.includes(word)) {
         console.log("Valid word:", word);
         updateScore(word.length);
+        foundWords.add(word);
+        updateAnswerArea(); // reveal the word
     } else {
         console.log("Invalid word:", word);
     }
@@ -203,15 +207,52 @@ function findPossibleWords(letters) {
   }
   return possibleWords;
 }
+// New function to update the answer area
+function updateAnswerArea() {
+    answersArea.innerHTML = ""; // Clear previous answers
+    for (const word of possibleWords) {
+        const wordElement = document.createElement("div");
+        wordElement.classList.add("hidden-word");
+        if(foundWords.has(word)){
+          wordElement.textContent = word;
+        }else{
+          wordElement.textContent = "*".repeat(word.length);
+        }
+        answersArea.appendChild(wordElement);
+    }
+}
 // function to update the hint display
 function updateHintDisplay() {
-  const possibleWordsArray = [...possibleWords]; // Convert Set to array
-  if (hintIndex >= possibleWordsArray.length) {
-    hintIndex = 0; // Reset index if it exceeds the array length
+  const hiddenWords = [];
+  // Find all hidden word
+  for (const child of answersArea.children) {
+    if (child.textContent.includes("*")) {
+      hiddenWords.push(child);
+    }
   }
-  if(possibleWordsArray.length > 0){
-    possibleWordDisplay.textContent = possibleWordsArray[hintIndex];
-    hintIndex++; // Increment index for next hint
+  // if there is one, reveal a letter
+  if(hiddenWords.length > 0){
+    //pick a random hidden word
+    const randomHiddenWord = hiddenWords[Math.floor(Math.random() * hiddenWords.length)];
+    //find the random letter index
+    const index = Math.floor(Math.random() * randomHiddenWord.textContent.length);
+    let word;
+    for (const w of possibleWords) {
+      if(w.length == randomHiddenWord.textContent.length){
+        let count = 0;
+        for(let i=0; i<randomHiddenWord.textContent.length;i++){
+          if(randomHiddenWord.textContent[i] == '*'){
+            if(count == index){
+              //replace the letter
+              const newText = randomHiddenWord.textContent.substring(0,i)+w[i]+randomHiddenWord.textContent.substring(i+1);
+              randomHiddenWord.textContent = newText;
+              return;
+            }
+            count ++;
+          }
+        }
+      }
+    }
   }
 }
 
